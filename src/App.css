@@ -1,0 +1,38 @@
+#root {
+    max-width: 1280px;
+    max-height: 100vh;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+}
+
+.tile {
+    width: 54px;
+    height: 54px;
+    margin: 0.5em;
+    background-color: red;
+    border-width: 1px;
+    border-color: orange;
+    border-style: solid;
+}
+
+.active {
+    background-color: green;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.key {
+    box-sizing: border-box;
+    width: 54px;
+    height: 54px;
+    margin: 0.5em;
+    background-color: blue;
+    border-width: 1px;
+    border-color: orange;
+    border-style: solid;
+}
