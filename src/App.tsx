@@ -1,18 +1,13 @@
 import { useState } from "react";
+import Keyboard from "./components/keyboard";
 import "./App.css";
 
 type TileState = "empty" | "present" | "matched";
 type Tile = { number: number | null; state: TileState };
 
 const initialBoard = Array.from({ length: 5 }, () =>
-    Array(3).fill({ number: null, state: "empty" })
+    Array(3).fill(() => ({ number: null, state: "empty" }))
 );
-const keyboard = [
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9],
-    ["Enter", 0, "Backspace"],
-];
 
 interface TileProps {
     number: number | null;
@@ -28,9 +23,41 @@ const Tile = ({ number, state, active }: TileProps) => {
 };
 
 function App() {
-    const [currentRow, setCurrentRow] = useState(3);
-    const [currentCol, setCurrentCol] = useState(2);
+    const [currentCode, setCurrentCode] = useState(400);
+    const [currentRow, setCurrentRow] = useState(0);
+    const [currentCol, setCurrentCol] = useState(0);
     const [board, setBoard] = useState(initialBoard);
+
+    const onKeyPress = (key: string | number) => {
+        console.log(key);
+        if (key === "Enter" && currentCol > 2) {
+            setCurrentCol(0);
+            setCurrentRow((prev) => prev + 1);
+        } else if (key === "Backspace" && currentCol > 0) {
+            setBoard((prev) => {
+                const newBoard = [...prev];
+                newBoard[currentRow][currentCol - 1] = {
+                    number: null,
+                    state: "empty",
+                };
+                return newBoard;
+            });
+            setCurrentCol(currentCol - 1);
+        } else if (typeof key === "number" && key >= 0 && key <= 9) {
+            if (currentCol > 2) return;
+            setBoard((prev) => {
+                const newBoard = [...prev];
+                console.info("currentCol", currentCol);
+                newBoard[currentRow][currentCol] = {
+                    number: key,
+                    state: "empty",
+                };
+                return newBoard;
+            });
+            setCurrentCol((prev) => prev + 1);
+        }
+    };
+
     return (
         <>
             {/* board */}
@@ -45,18 +72,7 @@ function App() {
                     ))}
                 </div>
             ))}
-            {/* keyboard */}
-            <div className="keyboard">
-                {keyboard.map((row, i) => (
-                    <div key={i} className="row">
-                        {row.map((key, j) => (
-                            <button key={j} className="key">
-                                {key}
-                            </button>
-                        ))}
-                    </div>
-                ))}
-            </div>
+            <Keyboard onKeyPress={onKeyPress} />
         </>
     );
 }
